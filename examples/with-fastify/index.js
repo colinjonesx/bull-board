@@ -46,9 +46,12 @@ const readQueuesFromEnv = () => {
 const run = async () => {
   const queues = readQueuesFromEnv().map(q => createQueueMQ(q))
 
-  queues.forEach(async q => {
-    await setupBullMQProcessor(q.name);
-  });
+  if (process.env.RANDOM_WORKER) {
+    queues.forEach(async q => {
+      await setupBullMQProcessor(q.name);
+    });
+  }
+
 
   const app = fastify();
 
